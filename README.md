@@ -36,11 +36,20 @@ npm run dev
 ```
 ブラウザで [http://localhost:5173](http://localhost:5173) を開いて確認できます。
 
-### Docker
+### Docker（開発環境）
 ```bash
-docker-compose up
+docker compose up --build
 ```
-同じく [http://localhost:5173](http://localhost:5173) でアクセスできます。
+初回起動時に依存パッケージのインストールも自動で行われます。<br>
+起動後は [http://localhost:5173](http://localhost:5173) にアクセスしてください。
+
+ホットリロードに対応しているため、ホスト側でソースコードを編集するとコンテナ内の Vite サーバーに即座に反映されます。停止する場合は `Ctrl + C` を押すか、別ターミナルで `docker compose down` を実行してください。
+
+### 本番ビルドの手順
+```bash
+docker-compose -f docker-compose.prod.yml up --build
+```
+本番モードでは [http://localhost:4173](http://localhost:4173) でアクセスできます。
 
 ---
 
