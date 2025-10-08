@@ -67,6 +67,23 @@ docker-compose -f docker-compose.prod.yml up --build
 
 ---
 
+## 外部サイトへの埋め込み
+チャットを別サイトに設置したい場合は、ビルド成果物に含まれる `widget.html` を iframe として読み込むだけで利用できます。
+
+```html
+<iframe
+  src="https://example.com/widget.html"
+  title="Snack Misaki Chat"
+  style="width: 360px; height: 640px; border: 0;"
+  allow="clipboard-write"
+></iframe>
+```
+
+開発環境では [http://localhost:5173/widget.html](http://localhost:5173/widget.html) にアクセスするとウィジェット単体の画面を確認できます。<br>
+Vite のマルチページ構成を利用しているため、`npm run build` で生成される `dist/widget.html` をそのままホスティングすれば「分店」のようにどこからでも呼び出すことができます。
+
+---
+
 ## 今後の拡張
 - **UI/UX 改善**: 会話履歴、テーマ切替など
 - **多言語対応**
