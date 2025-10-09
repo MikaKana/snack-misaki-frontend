@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { API_BASE_URL, REQUEST_TIMEOUT_MS } from "../config";
 import { matchStaticResponse } from "../constants/responses";
 import { getTimePersona } from "../utils/timeGreetings";
@@ -83,6 +83,7 @@ const fallbackResponse = () =>
 export const useChatEngine = () => {
   const [messages, setMessages] = useState<ChatMessage[]>(() => initialGreeting());
   const [isBusy, setIsBusy] = useState(false);
+  const conversationIdRef = useRef(0);
 
   const persona = useMemo(() => getTimePersona(), []);
 
@@ -93,32 +94,39 @@ export const useChatEngine = () => {
         return { handledBy: "fallback" };
       }
 
+      const conversationId = conversationIdRef.current;
+
       setMessages((prev) => [...prev, createMessage("user", trimmed), mamaTypingMessage()]);
       setIsBusy(true);
 
       await new Promise((resolve) => setTimeout(resolve, 400));
 
+      if (conversationIdRef.current !== conversationId) {
+        return { handledBy: "fallback" };
+      }
+
       const staticResponse = matchStaticResponse(trimmed);
       if (staticResponse) {
-        setMessages((prev) => [
-          ...prev.filter((message) => message.id !== "typing"),
-          createMessage("mama", staticResponse)
-        ]);
-        setIsBusy(false);
+        if (conversationIdRef.current === conversationId) {
+          setMessages((prev) => [
+            ...prev.filter((message) => message.id !== "typing"),
+            createMessage("mama", staticResponse)
+          ]);
+          setIsBusy(false);
+        }
         return { handledBy: "static" };
       }
 
       const apiReply = await callApi(trimmed);
 
-      setMessages((prev) => [
-        ...prev.filter((message) => message.id !== "typing"),
-        apiReply
-          ? createMessage("mama", apiReply)
-          : fallbackResponse(),
-        createMessage("system", `${persona.mamaName}は会話を記録しているわ。`)
-      ]);
-
-      setIsBusy(false);
+      if (conversationIdRef.current === conversationId) {
+        setMessages((prev) => [
+          ...prev.filter((message) => message.id !== "typing"),
+          apiReply ? createMessage("mama", apiReply) : fallbackResponse(),
+          createMessage("system", `${persona.mamaName}は会話を記録しているわ。`)
+        ]);
+        setIsBusy(false);
+      }
 
       return { handledBy: apiReply ? "api" : "fallback" };
     },
@@ -126,7 +134,9 @@ export const useChatEngine = () => {
   );
 
   const resetConversation = useCallback(() => {
+    conversationIdRef.current += 1;
     setMessages(initialGreeting());
+    setIsBusy(false);
   }, []);
 
   return {
