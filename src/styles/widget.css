@@ -25,6 +25,7 @@ body.chat-widget-body {
 }
 
 .widget-shell .chat-window {
+    flex: 1;
     background: transparent;
     box-shadow: none;
     padding: 0;
