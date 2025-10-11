@@ -1,13 +1,15 @@
 import ChatWindow from "./components/ChatWindow";
-import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Header from "./components/Header";
+import IntroSection from "./components/IntroSection";
 
 function App() {
   return (
     <div className="app-shell">
       <Header />
       <main className="main-area">
-        <ChatWindow />
+          <IntroSection />
+          <ChatWindow />
       </main>
       <Footer />
     </div>
