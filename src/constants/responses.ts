@@ -22,7 +22,7 @@ export const staticResponses: StaticResponse[] = [
     id: "menu",
     patterns: [/おすすめ|メニュー/, /ドリンク/],
     response:
-      "今日はフルーツたっぷりの美咲特製サングリアがおすすめよ。ゆっくり味わってね。"
+      "今日はフルーツたっぷりの美砂樹特製サングリアがおすすめよ。ゆっくり味わってね。"
   },
   {
     id: "first_time",

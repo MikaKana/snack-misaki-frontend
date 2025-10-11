@@ -6,7 +6,7 @@ function Header() {
       </div>
       <div>
         <h1 className="brand-title">Snack Misaki</h1>
-        <p className="brand-subtitle">いらっしゃいませ、スナック美咲へようこそ</p>
+        <p className="brand-subtitle">いらっしゃいませ、スナック美砂樹へようこそ</p>
       </div>
     </header>
   );

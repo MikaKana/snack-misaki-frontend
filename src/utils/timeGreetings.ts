@@ -5,7 +5,7 @@ const PERIODS = [
         endHour: 11,
         greeting: "眠そうなママが『まだ開店してないのよ〜』と笑っているわ。",
         closing: "朝はゆっくり準備中。また夜に会いましょうね。",
-        mamaName: "朝の美咲"
+        mamaName: "朝の美砂樹"
     },
     {
         id: "evening",
@@ -13,7 +13,7 @@ const PERIODS = [
         endHour: 22,
         greeting: "テンション高めのママが『待ってたわよ！』と迎えてくれるわ。",
         closing: "そろそろラストオーダー。夜はまだまだこれからよ。",
-        mamaName: "夜の美咲"
+        mamaName: "夜の美砂樹"
     },
     {
         id: "late_night",
@@ -21,7 +21,7 @@ const PERIODS = [
         endHour: 28,
         greeting: "照明を落とした店内で『今日はゆっくりしていって』と囁くママ。",
         closing: "今日はもうおしまいよ。また明日も来てくれる？",
-        mamaName: "深夜の美咲"
+        mamaName: "深夜の美砂樹"
     }
 ] as const;
 
@@ -38,7 +38,7 @@ const DEFAULT_PERSONA: Persona = {
     id: "daytime",
     greeting: "カウンターでママが『いらっしゃい、ゆっくりしていってね』と微笑んでいるわ。",
     closing: "またのお越しをお待ちしているわ。",
-    mamaName: "美咲"
+    mamaName: "美砂樹"
 };
 
 const to24Hour = (hour: number) => (hour >= 24 ? hour - 24 : hour);

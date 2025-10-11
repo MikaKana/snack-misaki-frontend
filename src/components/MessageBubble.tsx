@@ -7,7 +7,7 @@ export type MessageBubbleProps = {
 
 const senderLabel: Record<ChatMessage["sender"], string> = {
   user: "あなた",
-  mama: "美咲ママ",
+  mama: "美砂樹ママ",
   system: "システム"
 };
 
