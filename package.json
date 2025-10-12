@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "format": "eslint . --ext ts,tsx --fix"
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "format": "eslint . --ext ts,tsx --fix",
+    "test": "node --loader ./tests/ts-test-loader.mjs --test tests/*.test.ts",
+    "test:coverage": "node --loader ./tests/ts-test-loader.mjs --test --experimental-test-coverage tests/*.test.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",

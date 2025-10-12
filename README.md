@@ -36,6 +36,21 @@ npm run dev
 ```
 ブラウザで [http://localhost:5173](http://localhost:5173) を開いて確認できます。
 
+### テスト
+Node.js の組み込みテストランナーを利用して TypeScript のユニットテストを実行できます。
+
+```bash
+npm test
+```
+
+コードカバレッジのレポートを取得したい場合は次のコマンドを使用してください。
+
+```bash
+npm run test:coverage
+```
+
+※ 実行時に `--experimental-loader` の警告が表示されることがありますが、これはテスト用 TypeScript ローダーを有効化するためのものです。
+
 ### Docker（開発環境）
 ```bash
 docker compose up --build
