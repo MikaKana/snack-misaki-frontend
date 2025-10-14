@@ -27,10 +27,7 @@ const initialGreeting = (): ChatMessage[] => {
   const persona = getTimePersona();
   return [
     createMessage("mama", persona.greeting),
-    createMessage(
-      "system",
-      "ご注文や世間話など、好きなことを気軽に入力してくださいね。"
-    )
+    createMessage("system", persona.systemPrompt)
   ];
 };
 
