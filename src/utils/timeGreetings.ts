@@ -27,7 +27,7 @@ const PERIODS = [
 
 type Period = (typeof PERIODS)[number];
 
-type Persona = {
+export type Persona = {
     id: Period["id"] | "daytime";
     greeting: string;
     closing: string;
@@ -41,7 +41,32 @@ const DEFAULT_PERSONA: Persona = {
     mamaName: "美砂樹"
 };
 
+const PERSONA_BY_ID: Record<Persona["id"], Persona> = {
+    daytime: DEFAULT_PERSONA,
+    morning: {
+        id: "morning",
+        greeting: PERIODS[0].greeting,
+        closing: PERIODS[0].closing,
+        mamaName: PERIODS[0].mamaName
+    },
+    evening: {
+        id: "evening",
+        greeting: PERIODS[1].greeting,
+        closing: PERIODS[1].closing,
+        mamaName: PERIODS[1].mamaName
+    },
+    late_night: {
+        id: "late_night",
+        greeting: PERIODS[2].greeting,
+        closing: PERIODS[2].closing,
+        mamaName: PERIODS[2].mamaName
+    }
+};
+
 const to24Hour = (hour: number) => (hour >= 24 ? hour - 24 : hour);
+
+export const getPersonaById = (id: Persona["id"]): Persona =>
+    PERSONA_BY_ID[id] ?? DEFAULT_PERSONA;
 
 export const getTimePersona = (date = new Date()): Persona => {
     const currentHour = date.getHours();
@@ -59,10 +84,21 @@ export const getTimePersona = (date = new Date()): Persona => {
         return DEFAULT_PERSONA;
     }
 
-    return {
-        id: match.id,
-        greeting: match.greeting,
-        closing: match.closing,
-        mamaName: match.mamaName
-    };
+    return PERSONA_BY_ID[match.id];
+};
+
+const GREETING_KEYWORDS: Array<{ pattern: RegExp; personaId: Persona["id"] }> = [
+    { pattern: /おはよう/u, personaId: "morning" },
+    { pattern: /こんばんは/u, personaId: "evening" },
+    { pattern: /こんにち[はわ]/u, personaId: "daytime" }
+];
+
+export const resolveGreetingPersona = (input: string, date = new Date()): Persona => {
+    for (const { pattern, personaId } of GREETING_KEYWORDS) {
+        if (pattern.test(input)) {
+            return getPersonaById(personaId);
+        }
+    }
+
+    return getTimePersona(date);
 };

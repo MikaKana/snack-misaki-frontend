@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
 
 import { matchStaticResponse } from "../src/constants/responses.ts";
-import { getTimePersona } from "../src/utils/timeGreetings.ts";
+import { getPersonaById, getTimePersona } from "../src/utils/timeGreetings.ts";
 
 describe("matchStaticResponse", () => {
     const RealDate = Date;
@@ -42,6 +42,30 @@ describe("matchStaticResponse", () => {
 
         assert.equal(result, expected);
     });
+
+    it("prefers the greeting keyword over the current time when choosing a persona", () => {
+        class MockDate extends RealDate {
+            constructor(...args: ConstructorParameters<typeof RealDate>) {
+                if (args.length === 0) {
+                    super("2024-01-01T10:00:00");
+                } else {
+                    super(...args);
+                }
+            }
+
+            static override now() {
+                return new RealDate("2024-01-01T10:00:00").getTime();
+            }
+        }
+
+        global.Date = MockDate as unknown as DateConstructor;
+
+        const expected = getPersonaById("evening").greeting;
+        const result = matchStaticResponse("こんばんは");
+
+        assert.equal(result, expected);
+    });
+
 
     it("returns null when there is no matching pattern", () => {
         const result = matchStaticResponse("これはテストメッセージです");

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { getTimePersona } from "../utils/timeGreetings";
+import { getTimePersona, resolveGreetingPersona } from "../utils/timeGreetings";
 
 export type StaticResponse = {
   id: string;
@@ -15,7 +15,7 @@ export const staticResponses: StaticResponse[] = [
   {
     id: "greeting",
     patterns: ["こんにちは", "こんばんは", "おはよう"],
-    response: () => getTimePersona().greeting,
+    response: (input) => resolveGreetingPersona(input).greeting,
     description: "時間帯に応じた挨拶"
   },
   {
