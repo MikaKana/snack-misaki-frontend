@@ -121,7 +121,7 @@ code {
 
 .chat-window {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   background: rgba(255, 255, 255, 0.85);
   border-radius: 24px;
   padding: 24px;
@@ -272,13 +272,61 @@ code {
   .app-header {
     flex-direction: column;
     text-align: center;
+    gap: 12px;
   }
 
   .intro-section {
-    padding: 24px;
+    padding: 24px 20px;
+    border-radius: 24px;
   }
 
   .message {
     max-width: 100%;
+  }
+
+  .chat-window {
+    padding: 20px;
+    gap: 20px;
+    border-radius: 20px;
+  }
+
+  .chat-log {
+    max-height: min(60vh, 420px);
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-actions .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-shell {
+    padding: 12px;
+  }
+
+  .intro-title {
+    font-size: clamp(20px, 7vw, 26px);
+  }
+
+  .intro-description {
+    font-size: 15px;
+  }
+
+  .chat-window {
+    padding: 18px;
+    gap: 18px;
+  }
+
+  .chat-form {
+    gap: 16px;
+  }
+
+  .button {
+    padding: 12px;
   }
 }
