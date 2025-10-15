@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import WidgetApp from "./WidgetApp";
-import "./styles/global.css";
+import { TranslationProvider } from "./i18n";import "./styles/global.css";
 import "./styles/widget.css";
 
 const rootElement = document.getElementById("root");
@@ -11,7 +11,9 @@ if (rootElement) {
 
     createRoot(rootElement).render(
         <React.StrictMode>
-            <WidgetApp />
+            <TranslationProvider>
+                <WidgetApp />
+            </TranslationProvider>
         </React.StrictMode>
     );
 }

@@ -1,15 +1,16 @@
+import { useTranslation } from "../i18n";
+
 function IntroSection() {
+    const { t } = useTranslation();
+
     return (
         <section className="intro-section" aria-labelledby="intro-heading">
             <div className="intro-content">
-                <p className="intro-kicker">今日もおつかれさま</p>
+                <p className="intro-kicker">{t("intro.kicker")}</p>
                 <h2 id="intro-heading" className="intro-title">
-                    ママと一緒に小さなひとときを分かち合おう
+                    {t("intro.title")}
                 </h2>
-                <p className="intro-description">
-                    今日はどんなことがあった？嬉しかったことも、ちょっと疲れたことも、
-                    このスナックでゆっくりお話していってね。
-                </p>
+                <p className="intro-description">{t("intro.description")}</p>
             </div>
         </section>
     );

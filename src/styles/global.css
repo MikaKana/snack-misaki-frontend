@@ -33,10 +33,18 @@ code {
   display: flex;
   gap: 16px;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   background: rgba(255, 255, 255, 0.75);
   border-radius: 20px;
   padding: 16px 24px;
   box-shadow: 0 10px 40px rgba(249, 168, 212, 0.35);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .brand-mark {
@@ -52,6 +60,39 @@ code {
 .brand-subtitle {
   margin: 4px 0 0;
   color: #6b7280;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+}
+
+.language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.language-switcher__label {
+  font-weight: 600;
+}
+
+.language-select {
+  border-radius: 999px;
+  border: 1px solid rgba(219, 39, 119, 0.35);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 6px 12px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(219, 39, 119, 0.1);
+}
+
+.language-select:focus-visible {
+  outline: 2px solid rgba(219, 39, 119, 0.5);
+  outline-offset: 2px;
 }
 
 .main-area {

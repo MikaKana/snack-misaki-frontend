@@ -1,5 +1,6 @@
 import { FormEvent, useRef, useState } from "react";
 import { useChatEngine } from "../hooks/useChatEngine";
+import { useTranslation } from "../i18n";
 import MessageBubble from "./MessageBubble";
 
 function ChatWindow() {
@@ -7,6 +8,7 @@ function ChatWindow() {
   const [input, setInput] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,12 +37,12 @@ function ChatWindow() {
 
       <form className="chat-form" onSubmit={handleSubmit} ref={formRef}>
         <label className="form-label" htmlFor="chat-input">
-          ママへのひとこと
+          {t("chat.promptLabel")}
         </label>
         <textarea
           id="chat-input"
           className="form-input"
-          placeholder="今日の出来事や相談ごとを教えてね。"
+          placeholder={t("chat.placeholder")}
           value={input}
           onChange={(event) => setInput(event.target.value)}
           rows={3}
@@ -48,10 +50,10 @@ function ChatWindow() {
         />
         <div className="form-actions">
           <button type="submit" className="button" disabled={isBusy || !input.trim()}>
-            送信する
+            {t("chat.submit")}
           </button>
           <button type="button" className="button button--ghost" onClick={resetConversation}>
-            会話をリセット
+            {t("chat.reset")}
           </button>
         </div>
       </form>
