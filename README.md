@@ -4,8 +4,8 @@
 このリポジトリは **Snack Misaki プロジェクトのフロントエンド** です。  
 Vite + React + TypeScript をベースに、ユーザー入力と定型文レスポンスを提供します。
 
-- **Stage 1**: フロントエンドのみで定型文レスポンスを返す PoC
-- **Stage 2 以降**: バックエンド API（Lambda + LLM）との連携に対応
+- **Stage 1**: フロントエンドのみで定型文レスポンスを返す PoC。`VITE_API_BASE_URL` を設定しないデフォルト構成ではこの挙動になります。
+- **Stage 2 以降**: バックエンド API（Lambda + LLM）との連携に対応。`VITE_API_BASE_URL` を設定し、Lambda + LLM 側のエンドポイントを用意すると利用できます。
 
 ---
 
@@ -72,6 +72,7 @@ docker-compose -f docker-compose.prod.yml up --build
 `.env` または `src/config.ts` で設定します。
 
 - `VITE_API_BASE_URL` : バックエンド API のエンドポイント
+  - 未設定の場合は Stage 1 と同様にフロントエンドのみで定型文とフォールバック応答を返します。
 
 ---
 
