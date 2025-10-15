@@ -24,14 +24,14 @@ describe("getTimePersona", () => {
         const persona = getTimePersona(new Date(2024, 0, 1, 6, 30));
 
         assert.equal(persona.id, "morning");
-        assert.match(persona.greeting, /眠そうなママ/u);
+        assert.equal(persona.greeting, "まだ開店してないの。");
     });
 
     it("returns the late-night persona for hours past midnight", () => {
         const persona = getTimePersona(new Date(2024, 0, 1, 2, 0));
 
         assert.equal(persona.id, "late_night");
-        assert.match(persona.greeting, /照明を落とした店内/u);
+        assert.match(persona.systemPrompt, /照明を落とした店内/u);
     });
 
     it("falls back to the default persona during the daytime lull", () => {
