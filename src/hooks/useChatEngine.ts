@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { API_BASE_URL, REQUEST_TIMEOUT_MS } from "../config";
 import { matchStaticResponse } from "../constants/responses";
 import { getTimePersona } from "../utils/timeGreetings";
+import { generateUUID } from "../utils/uuid";
 import type { ChatMessage } from "../types";
 
 type SendMessageResult = {
@@ -9,7 +10,7 @@ type SendMessageResult = {
 };
 
 const createMessage = (sender: ChatMessage["sender"], text: string): ChatMessage => ({
-  id: crypto.randomUUID(),
+  id: generateUUID(),
   sender,
   text,
   createdAt: new Date()
@@ -82,8 +83,6 @@ export const useChatEngine = () => {
   const [isBusy, setIsBusy] = useState(false);
   const conversationIdRef = useRef(0);
 
-  const persona = useMemo(() => getTimePersona(), []);
-
   const sendMessage = useCallback(
     async (text: string): Promise<SendMessageResult> => {
       const trimmed = text.trim();
@@ -92,6 +91,7 @@ export const useChatEngine = () => {
       }
 
       const conversationId = conversationIdRef.current;
+      const persona = getTimePersona();
 
       setMessages((prev) => [...prev, createMessage("user", trimmed), mamaTypingMessage()]);
       setIsBusy(true);
@@ -127,7 +127,7 @@ export const useChatEngine = () => {
 
       return { handledBy: apiReply ? "api" : "fallback" };
     },
-    [persona.mamaName]
+    []
   );
 
   const resetConversation = useCallback(() => {
