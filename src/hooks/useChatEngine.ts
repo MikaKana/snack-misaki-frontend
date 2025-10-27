@@ -9,6 +9,43 @@ type SendMessageResult = {
   handledBy: "static" | "api" | "fallback";
 };
 
+type ApiConversationEntry = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+type ApiRequestMetadata = {
+  channel: string;
+  session_id: string;
+};
+
+type ApiRequestPayload = {
+  conversation: ApiConversationEntry[];
+  metadata: ApiRequestMetadata;
+};
+
+const CHANNEL = "web";
+
+const getInitialSessionId = (): string => {
+  if (typeof window === "undefined") {
+    return generateUUID();
+  }
+
+  try {
+    const storageKey = "snack-misaki-session-id";
+    const storedId = window.sessionStorage.getItem(storageKey);
+    if (storedId) {
+      return storedId;
+    }
+
+    const newId = generateUUID();
+    window.sessionStorage.setItem(storageKey, newId);
+    return newId;
+  } catch {
+    return generateUUID();
+  }
+};
+
 const createMessage = (sender: ChatMessage["sender"], text: string): ChatMessage => ({
   id: generateUUID(),
   sender,
@@ -32,7 +69,7 @@ const initialGreeting = (): ChatMessage[] => {
   ];
 };
 
-const callApi = async (text: string): Promise<string | null> => {
+const callApi = async (payload: ApiRequestPayload): Promise<string | null> => {
   if (!API_BASE_URL) {
     return null;
   }
@@ -46,7 +83,7 @@ const callApi = async (text: string): Promise<string | null> => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ message: text }),
+      body: JSON.stringify(payload),
       signal: controller.signal
     });
 
@@ -58,10 +95,10 @@ const callApi = async (text: string): Promise<string | null> => {
     if (
       data &&
       typeof data === "object" &&
-      "reply" in data &&
-      typeof (data as { reply: unknown }).reply === "string"
+      "message" in data &&
+      typeof (data as { message: unknown }).message === "string"
     ) {
-      return (data as { reply: string }).reply;
+      return (data as { message: string }).message;
     }
   } catch (error) {
     console.error("Failed to call backend API", error);
@@ -82,6 +119,18 @@ export const useChatEngine = () => {
   const [messages, setMessages] = useState<ChatMessage[]>(() => initialGreeting());
   const [isBusy, setIsBusy] = useState(false);
   const conversationIdRef = useRef(0);
+  const sessionIdRef = useRef<string>(getInitialSessionId());
+
+  const formatConversationForApi = useCallback(
+      (history: ChatMessage[]): ApiConversationEntry[] =>
+          history
+              .filter((message) => message.sender !== "system" && !message.pending)
+              .map((message) => ({
+                role: message.sender === "user" ? "user" : "assistant",
+                content: message.text
+              })),
+      []
+  );
 
   const sendMessage = useCallback(
     async (text: string): Promise<SendMessageResult> => {
@@ -92,8 +141,10 @@ export const useChatEngine = () => {
 
       const conversationId = conversationIdRef.current;
       const persona = getTimePersona();
+      const userMessage = createMessage("user", trimmed);
+      const typingMessage = mamaTypingMessage();
 
-      setMessages((prev) => [...prev, createMessage("user", trimmed), mamaTypingMessage()]);
+      setMessages((prev) => [...prev, userMessage, typingMessage]);
       setIsBusy(true);
 
       await new Promise((resolve) => setTimeout(resolve, 400));
@@ -114,7 +165,13 @@ export const useChatEngine = () => {
         return { handledBy: "static" };
       }
 
-      const apiReply = await callApi(trimmed);
+      const apiReply = await callApi({
+        conversation: formatConversationForApi([...messages, userMessage]),
+        metadata: {
+          channel: CHANNEL,
+          session_id: sessionIdRef.current
+        }
+      });
 
       if (conversationIdRef.current === conversationId) {
         setMessages((prev) => [
@@ -127,7 +184,7 @@ export const useChatEngine = () => {
 
       return { handledBy: apiReply ? "api" : "fallback" };
     },
-    []
+    [formatConversationForApi, messages]
   );
 
   const resetConversation = useCallback(() => {
